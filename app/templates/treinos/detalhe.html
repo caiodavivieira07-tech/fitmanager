@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}{{ treino.nome }} | FitManager{% endblock %}
+{% block content %}
+<div class="card shadow-sm border-0">
+    <div class="card-body p-4">
+        <span class="badge text-bg-primary">{{ treino.nivel }}</span>
+        <h1 class="mt-3">{{ treino.nome }}</h1>
+        <p class="lead">{{ treino.objetivo }}</p>
+        <hr>
+        <p><strong>Duração:</strong> {{ treino.duracao }} minutos</p>
+        <p><strong>Descrição:</strong></p>
+        <p>{{ treino.descricao|linebreaksbr }}</p>
+
+        <a href="{% url 'lista_treinos' %}" class="btn btn-outline-dark">Voltar</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'editar_treino' treino.id %}" class="btn btn-primary">Editar</a>
+            <a href="{% url 'excluir_treino' treino.id %}" class="btn btn-danger">Excluir</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
