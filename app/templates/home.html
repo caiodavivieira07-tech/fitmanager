@@ -1,35 +1,136 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+
 {% block title %}Início | FitManager{% endblock %}
+
 {% block content %}
-<div class="p-5 mb-4 bg-white rounded-4 shadow-sm">
-    <div class="container-fluid py-3">
-        <span class="badge text-bg-primary mb-3">Django + Bootstrap</span>
-        <h1 class="display-5 fw-bold">Organize seus treinos.</h1>
-        <p class="lead">Cadastre, consulte, edite e exclua treinos em um sistema simples desenvolvido com Django.</p>
-        <a href="{% url 'lista_treinos' %}" class="btn btn-primary btn-lg">Ver treinos</a>
-        {% if user.is_authenticated %}
-            <a href="{% url 'criar_treino' %}" class="btn btn-outline-dark btn-lg ms-2">Cadastrar treino</a>
-        {% endif %}
+
+<div class="p-4 p-md-5 mb-4 bg-white rounded-4 shadow-sm">
+    <div class="row align-items-center">
+        <div class="col-lg-8">
+            <span class="badge text-bg-primary mb-3">GESTÃO FITNESS</span>
+
+            <h1 class="display-5 fw-bold">
+                Organize seus treinos.
+            </h1>
+
+            <p class="text-secondary fs-5 mt-3">
+                Gerencie seus treinos, acompanhe seus objetivos
+                e mantenha sua rotina organizada em um só lugar.
+            </p>
+
+            <a href="{% url 'lista_treinos' %}" class="btn btn-primary mt-2">
+                <i class="bi bi-list-check me-2"></i>Ver treinos
+            </a>
+
+            <a href="{% url 'criar_treino' %}"
+               class="btn btn-outline-primary mt-2">
+                <i class="bi bi-plus-circle me-2"></i>Novo treino
+            </a>
+        </div>
+
+        <div class="col-lg-4 text-center mt-4 mt-lg-0">
+            <i class="bi bi-bar-chart-line text-primary"
+               style="font-size: 110px;"></i>
+        </div>
     </div>
 </div>
 
-<h2 class="mb-4">Treinos recentes</h2>
-<div class="row g-4">
-    {% for treino in treinos %}
-    <div class="col-md-4">
-        <div class="card h-100 shadow-sm border-0">
-            <div class="card-body">
-                <span class="badge text-bg-secondary">{{ treino.nivel }}</span>
-                <h3 class="h5 mt-3">{{ treino.nome }}</h3>
-                <p class="text-muted">{{ treino.objetivo }}</p>
-                <a href="{% url 'detalhe_treino' treino.id %}" class="btn btn-outline-primary">Ver detalhes</a>
+<div class="row g-4 mb-4">
+    <div class="col-md-6 col-lg-4">
+        <div class="card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="text-secondary mb-2">Treinos cadastrados</p>
+                    <h2 class="fw-bold mb-0">
+                        {{ treinos.count|default:0 }}
+                    </h2>
+                </div>
+                <i class="bi bi-clipboard-check text-primary fs-1"></i>
             </div>
         </div>
     </div>
-    {% empty %}
-    <div class="col-12">
-        <div class="alert alert-info">Nenhum treino cadastrado ainda.</div>
+
+    <div class="col-md-6 col-lg-4">
+        <div class="card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="text-secondary mb-2">Sua plataforma</p>
+                    <h4 class="fw-bold mb-0">FitManager</h4>
+                    <small class="text-secondary">Gestão de treinos</small>
+                </div>
+                <i class="bi bi-heart-pulse text-danger fs-1"></i>
+            </div>
+        </div>
     </div>
-    {% endfor %}
+
+    <div class="col-md-6 col-lg-4">
+        <div class="card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="text-secondary mb-2">Organização</p>
+                    <h4 class="fw-bold mb-0">Em um só lugar</h4>
+                    <small class="text-secondary">Seus treinos</small>
+                </div>
+                <i class="bi bi-calendar-check text-success fs-1"></i>
+            </div>
+        </div>
+    </div>
 </div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h3 class="fw-bold mb-1">Treinos recentes</h3>
+        <p class="text-secondary mb-0">Confira os últimos treinos cadastrados.</p>
+    </div>
+
+    <a href="{% url 'lista_treinos' %}" class="text-decoration-none">
+        Ver todos <i class="bi bi-arrow-right"></i>
+    </a>
+</div>
+
+{% if treinos %}
+    <div class="row g-3">
+        {% for treino in treinos %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card p-4 h-100">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-3 p-3 me-3">
+                            <i class="bi bi-lightning-charge fs-4"></i>
+                        </div>
+                        <h5 class="fw-bold mb-0">{{ treino.nome }}</h5>
+                    </div>
+
+                    {% if treino.objetivo %}
+                        <p class="text-secondary">
+                            {{ treino.objetivo }}
+                        </p>
+                    {% endif %}
+
+                    <a href="{% url 'detalhe_treino' treino.pk %}"
+                       class="btn btn-outline-primary mt-auto">
+                        Ver detalhes
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="card p-5 text-center">
+        <i class="bi bi-clipboard2-plus text-primary"
+           style="font-size: 50px;"></i>
+
+        <h5 class="fw-bold mt-3">Nenhum treino cadastrado</h5>
+
+        <p class="text-secondary">
+            Comece adicionando seu primeiro treino ao FitManager.
+        </p>
+
+        <div>
+            <a href="{% url 'criar_treino' %}" class="btn btn-primary">
+                <i class="bi bi-plus-lg me-2"></i>Cadastrar primeiro treino
+            </a>
+        </div>
+    </div>
+{% endif %}
+
 {% endblock %}
